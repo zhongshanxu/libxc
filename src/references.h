@@ -330,3 +330,4 @@ extern func_reference_type xc_ref_Furness2019_041119;
 extern func_reference_type xc_ref_Tozer1996_9200;
 extern func_reference_type xc_ref_PachecoKato2016_268;
 extern func_reference_type xc_ref_Klimes2011_195131;
+extern func_reference_type xc_ref_Austin2012_4989;
