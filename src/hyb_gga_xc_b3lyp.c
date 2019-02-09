@@ -299,12 +299,12 @@ void
 xc_hyb_gga_xc_apf_init(xc_func_type *p)
 {
   /* Functional is 41.1% B3PW91 and 58.9% PBE0 */
-  const double fb3pw91 = 0.411;
-  const double fpbe0   = 1.0 - fb3pw91;
+  static const double fb3pw91 = 0.411;
+  static const double fpbe0   = 1.0 - fb3pw91;
 
   /* Exact exchange in B3PW91 and PBE0 */
-  const double xb3pw91 = 0.20;
-  const double xpbe0   = 0.25;
+  static const double xb3pw91 = 0.20;
+  static const double xpbe0   = 0.25;
 
   static int   funcs_id  [6] = {XC_LDA_X, XC_GGA_X_B88, XC_LDA_C_PW, XC_GGA_C_PW91, XC_GGA_X_PBE, XC_GGA_C_PBE};
   static double funcs_coef[6] = {(1.0 - xb3pw91 - 0.72)*fb3pw91, 0.72*fb3pw91, (1.0 - 0.81)*fb3pw91, 0.81*fb3pw91, (1.0 - xpbe0)*fpbe0, fpbe0};
