@@ -87,9 +87,9 @@ work_gga(const XC(func_type) *p, size_t np,
     }
 
     if(p->nspin == XC_UNPOLARIZED){
-      func_unpol(p, order, my_rho, my_sigma OUT_PARAMS);      
+      func_unpol(p, order, my_rho, my_sigma, OUT_PARAMS);      
     }else{
-      func_pol  (p, order, my_rho, my_sigma OUT_PARAMS);
+      func_pol  (p, order, my_rho, my_sigma, OUT_PARAMS);
     }
 
     /* check for NaNs */
@@ -157,9 +157,9 @@ work_gga_gpu(const XC(func_type) *p, int order, size_t np, const double *rho, co
   }
 
   if(p->nspin == XC_UNPOLARIZED){
-    func_unpol(p, order, my_rho, my_sigma OUT_PARAMS);
+    func_unpol(p, order, my_rho, my_sigma, OUT_PARAMS);
   } else {                                      /* polarized (general) case */
-    func_pol  (p, order, my_rho, my_sigma OUT_PARAMS);
+    func_pol  (p, order, my_rho, my_sigma, OUT_PARAMS);
   }
 }
 

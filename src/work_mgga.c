@@ -86,9 +86,9 @@ work_mgga(const XC(func_type) *p, size_t np,
     }
 
     if(p->nspin == XC_UNPOLARIZED){
-      func_unpol(p, order, my_rho, my_sigma, lapl, my_tau OUT_PARAMS);
+      func_unpol(p, order, my_rho, my_sigma, lapl, my_tau, OUT_PARAMS);
     }else{
-      func_pol  (p, order, my_rho, my_sigma, lapl, my_tau OUT_PARAMS);
+      func_pol  (p, order, my_rho, my_sigma, lapl, my_tau, OUT_PARAMS);
     }
 
     /* check for NaNs */
@@ -180,9 +180,9 @@ work_mgga_gpu(const XC(func_type) *p, int order, size_t np,
   }
 
   if(p->nspin == XC_UNPOLARIZED){
-    func_unpol(p, order, my_rho, my_sigma, lapl, my_tau OUT_PARAMS);
+    func_unpol(p, order, my_rho, my_sigma, lapl, my_tau, OUT_PARAMS);
   }else{
-    func_pol(p, order, my_rho, my_sigma, lapl, my_tau OUT_PARAMS);
+    func_pol(p, order, my_rho, my_sigma, lapl, my_tau, OUT_PARAMS);
   }
 
 }
