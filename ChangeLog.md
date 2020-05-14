@@ -1,4 +1,4 @@
-## [5.0.1] to be released
+## [5.1.0] to be released
 
 ### Fixed
 - Bugs in worker functions affecting all GGAs and meta-GGAs.
