@@ -17,8 +17,9 @@ typedef struct {
 
 #define N_PAR 3
 static const char *names[N_PAR] = {"_a1", "_b1", "_alpha"};
-static const char *desc[N_PAR] = {"a1 parameter", "b1 parameter",
-                                  "alpha parameter"};
+static const char *desc[N_PAR] = {
+  "a1 parameter", "b1 parameter", "alpha parameter"
+};
 
 static const double par_dk87_r1[N_PAR] = {0.861504, 0.044286, 1.0};
 
@@ -43,7 +44,7 @@ const xc_func_info_type xc_func_info_gga_x_dk87_r1 = {
   XC_FAMILY_GGA,
   {&xc_ref_DePristo1987_1425, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | MAPLE2C_FLAGS,
-  1e-24,
+  1e-14,
   {N_PAR, names, desc, par_dk87_r1, set_ext_params_cpy},
   gga_x_dk87_init, NULL,
   NULL, work_gga, NULL
@@ -59,7 +60,7 @@ const xc_func_info_type xc_func_info_gga_x_dk87_r2 = {
   XC_FAMILY_GGA,
   {&xc_ref_DePristo1987_1425, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | MAPLE2C_FLAGS,
-  1e-24,
+  1e-14,
   {N_PAR, names, desc, par_dk87_r2, set_ext_params_cpy},
   gga_x_dk87_init, NULL,
   NULL, work_gga, NULL

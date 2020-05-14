@@ -582,7 +582,7 @@ const xc_func_info_type xc_func_info_hyb_gga_xc_b3lyp_mcm1 = {
   XC_FAMILY_HYB_GGA,
   {&xc_ref_Caldeira2019_62, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | XC_FLAGS_I_HAVE_ALL,
-  1e-32,
+  1e-14,
   {MCM1_N_PAR, mcm1_names, mcm1_desc, mcm1_values, mcm1_set_ext_params},
   xc_hyb_gga_xc_b3lyp_mcm_init, NULL,
   NULL, NULL, NULL
@@ -598,7 +598,7 @@ const xc_func_info_type xc_func_info_hyb_gga_xc_b3lyp_mcm2 = {
   XC_FAMILY_HYB_GGA,
   {&xc_ref_Caldeira2019_62, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | XC_FLAGS_I_HAVE_ALL,
-  1e-32,
+  1e-14,
   {MCM1_N_PAR, mcm1_names, mcm1_desc, mcm2_values, mcm1_set_ext_params},
   xc_hyb_gga_xc_b3lyp_mcm_init, NULL,
   NULL, NULL, NULL

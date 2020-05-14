@@ -17,9 +17,9 @@ typedef struct {
 
 #define N_PAR 3
 static const char *names[N_PAR] = {"_aa", "_bb", "_cc"};
-static const char *desc[N_PAR] = {"Coefficient of s^2 term",
-                                  "Coefficient of s^4 term",
-                                  "Coefficient of s^6 term"};
+static const char *desc[N_PAR] = {
+  "Coefficient of s^2 term", "Coefficient of s^4 term", "Coefficient of s^6 term"
+};
 
 static const double par_pw86[3] = {1.296, 14.0, 0.2};
 
@@ -44,7 +44,7 @@ const xc_func_info_type xc_func_info_gga_x_pw86 = {
   XC_FAMILY_GGA,
   {&xc_ref_Perdew1986_8800, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | MAPLE2C_FLAGS,
-  1e-24,
+  1e-14,
   {N_PAR, names, desc, par_pw86, set_ext_params_cpy},
   gga_x_pw86_init, NULL,
   NULL, work_gga, NULL
@@ -60,7 +60,7 @@ const xc_func_info_type xc_func_info_gga_x_rpw86 = {
   XC_FAMILY_GGA,
   {&xc_ref_Murray2009_2754, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | MAPLE2C_FLAGS,
-  1e-24,
+  1e-14,
   {N_PAR, names, desc, par_rpw86, set_ext_params_cpy},
   gga_x_pw86_init, NULL,
   NULL, work_gga, NULL

@@ -25,9 +25,8 @@ gga_x_optx_init(xc_func_type *p)
 #define OPTX_N_PAR 3
 static const char  *optx_names[OPTX_N_PAR]  = {"_a", "_b", "_gamma"};
 static const char  *optx_desc[OPTX_N_PAR]   = {
-  "a",
-  "b",
-  "gamma"};
+  "a", "b", "gamma"
+};
 static const double optx_values[OPTX_N_PAR] =
   {1.05151, 1.43169/X_FACTOR_C, 0.006};
 
@@ -45,7 +44,7 @@ const xc_func_info_type xc_func_info_gga_x_optx = {
   XC_FAMILY_GGA,
   {&xc_ref_Handy2001_403, NULL, NULL, NULL, NULL},
   XC_FLAGS_3D | MAPLE2C_FLAGS,
-  1e-22,
+  1e-14,
   {OPTX_N_PAR, optx_names, optx_desc, optx_values, set_ext_params_cpy},
   gga_x_optx_init, NULL, 
   NULL, work_gga, NULL
