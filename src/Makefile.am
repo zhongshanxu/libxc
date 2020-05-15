@@ -127,7 +127,7 @@ noinst_HEADERS = \
 	string_f.h references.h util.h \
 	decl_lda.h decl_gga.h decl_mgga.h \
   work_lda.c work_gga.c work_mgga.c \
-	libxc_master.F90
+	libxc_master.F90 libxc_master_f90.F90
 include_HEADERS = xc.h xc_funcs_removed.h
 nodist_include_HEADERS = xc_funcs.h xc_funcs_worker.h
 
@@ -178,5 +178,11 @@ libxcf90.f90 : libxc_master.F90 libxc_inc.f90
 		grep -v "^#" $(top_builddir)/src/libxcf90.f90 > $(top_builddir)/src/libxcf90.f91; \
 		mv -f $(top_builddir)/src/libxcf90.f91 $(top_builddir)/src/libxcf90.f90; \
 	fi
+libxcf90_f90.f90 : libxc_master_f90.F90 libxc_inc.f90
+	@FCCPP@ @CPPFLAGS@ $(AM_CPPFLAGS) -I$(top_builddir)/src $(srcdir)/libxc_master_f90.F90 > $(top_builddir)/src/libxcf90_f90.f90
+	@if [ "@F90_ACCEPTS_LINE_NUMBERS@" = "no" ]; then \
+		grep -v "^#" $(top_builddir)/src/libxcf90_f90.f90 > $(top_builddir)/src/libxcf90_f90.f91; \
+		mv -f $(top_builddir)/src/libxcf90_f90.f91 $(top_builddir)/src/libxcf90_f90.f90; \
+	fi
 
-$(XCF90LIBMODS) : $(LTPREF90)libxcf90.lo
+$(XCF90LIBMODS) : $(LTPREF90)libxcf90.lo $(LTPREF90)libxcf90_f90.lo

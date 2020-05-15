@@ -387,7 +387,7 @@ set(src_prefix "src/")
 string(REGEX REPLACE "([^;]+)" "${src_prefix}\\1" sources_list "${raw_sources_list}")
 
 set(raw_sources_list_f90
-  src/libxc_master.F90
+  src/libxc_master.F90 src/libxc_master_f90.F90
   )
 
 # when headers namespaced, xc_version include in xc.h needs to be local, not

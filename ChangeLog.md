@@ -8,6 +8,7 @@
 
 ### Changed
 - The renaming libxcf03 -> libxcf90 of 5.0.0 was reverted, as it proved to be problematic in downstream codes.
+- A copy of the renamed libxcf90 is, however, provided until the next major release.
 
 ## [5.0.0] - 2020-04-06
 
