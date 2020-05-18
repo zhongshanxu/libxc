@@ -116,7 +116,7 @@ libxc_la_LDFLAGS = -version-info $(XC_LT_VERSION)
 if COMPILE_FORTRAN
   lib_LTLIBRARIES += libxcf90.la
 
-  nodist_libxcf90_la_SOURCES = libxcf90.f90
+  nodist_libxcf90_la_SOURCES = libxcf90.f90 libxcf90_f90.f90
 
   # libtool stuff
   libxcf90_la_LDFLAGS = -version-info $(XC_LT_VERSION)
