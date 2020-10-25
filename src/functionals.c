@@ -186,7 +186,11 @@ void xc_func_nullify(xc_func_type *func)
   func->nlc_b = func->nlc_C = 0.0;
 
   func->params     = NULL;
-  func->dens_threshold = 0.0;
+
+  func->threshold_dens  = 0.0;
+  func->threshold_zeta  = 0.0;
+  func->threshold_sigma = 0.0;
+  func->threshold_tau   = 0.0;
 }
 
 /*------------------------------------------------------*/
@@ -237,7 +241,13 @@ int xc_func_init(xc_func_type *func, int functional, int nspin)
   if(func->info->ext_params.n > 0)
     func->info->ext_params.set(func, NULL);
 
-  func->dens_threshold = func->info->dens_threshold;
+  /* this is initialized for each functional from the info */
+  func->threshold_dens = func->info->threshold_dens;
+
+  /* these are reasonble defaults */
+  func->threshold_zeta  = 1.0 - 1.0e-12;
+  func->threshold_sigma = 1e-20;
+  func->threshold_tau   = 1e-20;
 
   return 0;
 }
@@ -296,14 +306,29 @@ const xc_func_info_type *xc_func_get_info(const xc_func_type *p)
 }
 
 /*------------------------------------------------------*/
-void xc_func_set_dens_threshold(xc_func_type *p, double dens_threshold)
+void xc_func_set_dens_threshold(xc_func_type *p, double t_dens)
 {
   int ii;
 
-  p->dens_threshold = dens_threshold;
+  p->threshold_dens = t_dens;
 
   for(ii=0; ii<p->n_func_aux; ii++) {
-    xc_func_set_dens_threshold(p->func_aux[ii], dens_threshold);
+    xc_func_set_dens_threshold(p->func_aux[ii], t_dens);
+  }
+}
+
+/*------------------------------------------------------*/
+void xc_func_set_thresholds(xc_func_type *p, double t_dens, double t_zeta, double t_sigma, double t_tau)
+{
+  int ii;
+
+  if(t_dens  > 0.0) p->threshold_dens  = t_dens;
+  if(t_zeta  > 0.0) p->threshold_zeta  = t_zeta;
+  if(t_sigma > 0.0) p->threshold_sigma = t_sigma;
+  if(t_tau   > 0.0) p->threshold_tau   = t_tau;
+
+  for(ii=0; ii<p->n_func_aux; ii++) {
+    xc_func_set_thresholds(p->func_aux[ii], t_dens, t_zeta, t_sigma, t_tau);
   }
 }
 

@@ -842,7 +842,7 @@ double get_threshold(int id) {
     fprintf(stderr, "Error initializing functional id '%d'\n", id);
     exit(1);
   }
-  thr = func.dens_threshold;
+  thr = func.threshold_dens;
 
   printf("Functional supports:\n");
   if (func.info->flags & XC_FLAGS_HAVE_EXC)

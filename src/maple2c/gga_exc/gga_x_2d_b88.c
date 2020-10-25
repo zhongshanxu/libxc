@@ -60,7 +60,7 @@ func_unpol(const xc_func_type *p, int order, const double *rho, const double *si
 
 
 
-  t3 = rho[0] / 0.2e1 <= 0.101e1 * p->dens_threshold;
+  t3 = rho[0] / 0.2e1 <= 0.101e1 * p->threshold_dens;
   t4 = sqrt(M_PI);
   t6 = M_SQRT2;
   t7 = 0.1e1 / t4 * t6;
@@ -390,7 +390,7 @@ func_pol(const xc_func_type *p, int order, const double *rho, const double *sigm
 
 
 
-  t1 = 0.101e1 * p->dens_threshold;
+  t1 = 0.101e1 * p->threshold_dens;
   t2 = rho[0] <= t1;
   t3 = sqrt(M_PI);
   t4 = 0.1e1 / t3;

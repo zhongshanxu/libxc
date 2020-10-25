@@ -553,7 +553,7 @@ func_unpol(const xc_func_type *p, int order, const double *rho, const double *si
   assert(p->params != NULL);
   params = (mgga_k_pc07_params * ) (p->params);
 
-  t4 = rho[0] / 0.2e1 <= 0.101e1 * p->dens_threshold;
+  t4 = rho[0] / 0.2e1 <= 0.101e1 * p->threshold_dens;
   t5 = M_CBRT3;
   t6 = t5 * t5;
   t7 = M_CBRTPI;
@@ -5956,7 +5956,7 @@ func_pol(const xc_func_type *p, int order, const double *rho, const double *sigm
   assert(p->params != NULL);
   params = (mgga_k_pc07_params * ) (p->params);
 
-  t2 = 0.101e1 * p->dens_threshold;
+  t2 = 0.101e1 * p->threshold_dens;
   t3 = rho[0] <= t2;
   t4 = M_CBRT6;
   t5 = t4 * t4;

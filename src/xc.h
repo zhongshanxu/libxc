@@ -185,7 +185,7 @@ typedef struct{
 
   int   flags;    /* see above for a list of possible flags */
 
-  double dens_threshold;
+  double threshold_dens;
 
   /* this allows to have external parameters in the functional */
   func_params_type ext_params;
@@ -259,7 +259,11 @@ struct xc_func_type{
   xc_dimensions dim;           /* the dimensions of all input and output arrays */
 
   void *params;                /* this allows us to fix parameters in the functional */
-  double dens_threshold;
+
+  double threshold_dens;       /* functional is put to zero for densities smaller than this */
+  double threshold_zeta;       /* idem for the absolute value of zeta */
+  double threshold_sigma;
+  double threshold_tau;
 };
 
 typedef struct xc_func_type xc_func_type;
@@ -279,7 +283,10 @@ int   xc_func_init(xc_func_type *p, int functional, int nspin);
 void  xc_func_end(xc_func_type *p);
 void  xc_func_free(xc_func_type *p);
 const xc_func_info_type *xc_func_get_info(const xc_func_type *p);
-void  xc_func_set_dens_threshold(xc_func_type *p, double dens_threshold);
+
+void  xc_func_set_dens_threshold(xc_func_type *p, double t_dens);
+void  xc_func_set_thresholds(xc_func_type *p, double t_dens, double t_zeta, double t_sigma, double t_tau);
+
 void  xc_func_set_ext_params(xc_func_type *p, const double *ext_params);
 void  xc_func_set_ext_params_name(xc_func_type *p, const char *name, double par);
 

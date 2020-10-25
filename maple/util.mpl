@@ -87,10 +87,10 @@ beta_Hu_Langreth := rs -> 0.066724550603149220*(1 + 0.1*rs)/(1 + 0.1778*rs):
 
 # Generate exchange and kinetic functionals from the expression for the
 # enhancement factor
-lda_x_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_dens_threshold, 0,
+lda_x_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_threshold_dens, 0,
     simplify(LDA_X_FACTOR*((1 + z)/2)^(1 + 1/DIMENSIONS)*(RS_FACTOR/rs))):
 
-lda_k_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_dens_threshold, 0,
+lda_k_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_threshold_dens, 0,
     simplify(K_FACTOR_C*((1 + z)/2)^(5/3)*(RS_FACTOR/rs)^2)):
 
 gga_exchange_nsp := (func, rs, z, xs0, xs1) ->

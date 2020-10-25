@@ -12,8 +12,6 @@
  * @brief This file is to be included in MGGA functionals.
  */
 
-#define MIN_SIGMA 1e-20
-
 #ifdef XC_DEBUG
 #define __USE_GNU
 #include <fenv.h>
@@ -82,21 +80,21 @@ work_mgga(const XC(func_type) *p, size_t np,
   for(ip = 0; ip < np; ip++){
     /* Screen low densities */
     dens = (p->nspin == XC_POLARIZED) ? rho[0]+rho[1] : rho[0];
-    if(dens >= p->dens_threshold) {
+    if(dens >= p->threshold_dens) {
       /* sanity check of input parameters */
-      my_rho[0] = max(p->dens_threshold, rho[0]);
+      my_rho[0] = max(p->threshold_dens, rho[0]);
       /* Many functionals shamelessly divide by tau, so we set a reasonable threshold */
-      my_tau[0]   = max(MIN_SIGMA, tau[0]);
+      my_tau[0]   = max(p->threshold_tau, tau[0]);
       /* The Fermi hole curvature 1 - xs^2/(8*ts) must be positive */
-      my_sigma[0] = min(max(MIN_SIGMA, sigma[0]), 8.0*my_rho[0]*my_tau[0]);
+      my_sigma[0] = min(max(p->threshold_sigma, sigma[0]), 8.0*my_rho[0]*my_tau[0]);
       /* lapl can have any values */
       if(p->nspin == XC_POLARIZED){
         double s_ave;
 
-        my_rho[1] = max(p->dens_threshold, rho[1]);
-        my_tau[1]   = max(MIN_SIGMA, tau[1]);
+        my_rho[1]   = max(p->threshold_dens, rho[1]);
+        my_tau[1]   = max(p->threshold_tau, tau[1]);
 
-        my_sigma[2] = min(max(MIN_SIGMA, sigma[2]), 8.0*my_rho[1]*my_tau[1]);
+        my_sigma[2] = min(max(p->threshold_sigma, sigma[2]), 8.0*my_rho[1]*my_tau[1]);
 
         my_sigma[1] = sigma[1];
         s_ave = 0.5*(my_sigma[0] + my_sigma[2]);
@@ -185,21 +183,21 @@ work_mgga_gpu(const XC(func_type) *p, int order, size_t np,
 
   /* Screen low densities */
   dens = (p->nspin == XC_POLARIZED) ? rho[0]+rho[1] : rho[0];
-  if(dens >= p->dens_threshold) {
+  if(dens >= p->threshold_dens) {
     /* sanity check of input parameters */
-    my_rho[0]   = max(p->dens_threshold, rho[0]);
+    my_rho[0]   = max(p->threshold_dens, rho[0]);
     /* Many functionals shamelessly divide by tau, so we set a reasonable threshold */
-    my_tau[0]   = max(MIN_SIGMA, tau[0]);
+    my_tau[0]   = max(p->threshold_tau, tau[0]);
     /* The Fermi hole curvature 1 - xs^2/(8*ts) must be positive */
-    my_sigma[0] = min(max(MIN_SIGMA, sigma[0]), 8.0*my_rho[0]*my_tau[0]);
+    my_sigma[0] = min(max(p->threshold_sigma, sigma[0]), 8.0*my_rho[0]*my_tau[0]);
     /* lapl can have any values */
     if(p->nspin == XC_POLARIZED){
       double s_ave;
 
-      my_rho[1] = max(p->dens_threshold, rho[1]);
-      my_tau[1]   = max(MIN_SIGMA, tau[1]);
+      my_rho[1]   = max(p->threshold_dens, rho[1]);
+      my_tau[1]   = max(p->threshold_tau, tau[1]);
 
-      my_sigma[2] = min(max(MIN_SIGMA, sigma[2]), 8.0*my_rho[1]*my_tau[1]);
+      my_sigma[2] = min(max(p->threshold_sigma, sigma[2]), 8.0*my_rho[1]*my_tau[1]);
 
       my_sigma[1] = sigma[1];
       s_ave = 0.5*(my_sigma[0] + my_sigma[2]);
