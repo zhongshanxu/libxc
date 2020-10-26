@@ -13,13 +13,6 @@
 
 #include <xc.h>
 
-func_reference_type xc_ref_Acharya1980_6978 = {
-  "P. K. Acharya, L. J. Bartolotti, S. B. Sears, and R. G. Parr, Proc. Natl. Acad. Sci. U. S. A. 77, 6978 (1980)",
-  "10.1073/pnas.77.12.6978",
-  "@article{Acharya1980_6978,\n  title = {An atomic kinetic energy functional with full Weizsacker correction},\n  author = {P. K. Acharya and L. J. Bartolotti and S. B. Sears and R. G. Parr},\n  volume = {77},\n  number = {12},\n  pages = {6978},\n  year = {1980},\n  doi = {10.1073/pnas.77.12.6978},\n  url = {http://www.pnas.org/content/77/12/6978.abstract},\n  journal = {Proc. Natl. Acad. Sci. U. S. A.}\n}"
-};
-
-
 func_reference_type xc_ref_Adamo1997_242 = {
   "C. Adamo and V. Barone, Chem. Phys. Lett. 274, 242 (1997)",
   "10.1016/S0009-2614(97)00651-9",
