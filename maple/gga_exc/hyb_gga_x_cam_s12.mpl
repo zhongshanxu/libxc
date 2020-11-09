@@ -7,6 +7,12 @@
 *)
 
 (* type: gga_exc *)
+(* prefix:
+  hyb_gga_x_cam_s12_params *params;
+
+  assert(p->params != NULL);
+  params = (hyb_gga_x_cam_s12_params * )(p->params);
+*)
 
 $include "gga_x_ityh.mpl"
 $include "gga_x_s12.mpl"
