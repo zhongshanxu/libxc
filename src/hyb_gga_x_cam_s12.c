@@ -36,18 +36,27 @@ static const char  *desc[N_PAR]   = {
   "fraction of SR exchange",
   "range-separation parameter"
 };
+/* Paper reports alpha and beta in the Yanai convention, which differs from libxc */
 static const double par_cam_s12g[N_PAR] = {
   1.03323556, 1.757-1.03323556, 0.00417251, 0.00115216, 0.00706184, 0.34485046, -0.34485046, 1.52420731
 };
 static const double par_cam_s12h[N_PAR] = {
-  1.02149642, 1.757-1.02149642, 0.00825905, 0.00235804, 0.00654977, 0.25, 0.10897845-0.25, 0.48516891 
+  1.02149642, 1.757-1.02149642, 0.00825905, 0.00235804, 0.00654977, 0.25+0.10897845, -0.10897845, 0.48516891
 };
 
 static void
 s12h_set_ext_params(xc_func_type *p, const double *ext_params)
 {
+  double sr_exx;
+
+  hyb_gga_x_cam_s12_params *params;
   set_ext_params_cpy_cam(p, ext_params);
-  params->bx   = 1.0 - p->hyb_coeff[0];
+  params = (hyb_gga_x_cam_s12_params *) (p->params);
+
+  /* In the short range, the total fraction of exact exchange is */
+  sr_exx = p->hyb_coeff[0] + p->hyb_coeff[1];
+  /* so the fraction of short-range DFT is */
+  params->bx = 1.0 - sr_exx;
 }
 
 #include "decl_gga.h"
