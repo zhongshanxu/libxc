@@ -24,9 +24,7 @@ gga_order_4 = \
   gga_x_ev93.mpl gga_x_wc.mpl gga_x_ft97.mpl        \
   gga_k_apbeint.mpl gga_x_g96.mpl gga_k_apbe.mpl gga_x_hcth_a.mpl   \
   gga_k_dk.mpl gga_x_herman.mpl gga_x_gg99.mpl gga_x_fd_lb94.mpl    \
-  gga_x_ncap.mpl gga_x_s12.mpl gga_k_lkt.mpl
-
-gga_order_3 = \
+  gga_x_ncap.mpl gga_x_s12.mpl gga_k_lkt.mpl gga_x_cams12.mpl       \
   gga_c_acgga.mpl gga_c_acggap.mpl gga_c_am05.mpl gga_c_bmk.mpl     \
   gga_c_cs1.mpl gga_c_ft97.mpl gga_c_gapc.mpl gga_c_gaploc.mpl      \
   gga_c_hcth_a.mpl gga_c_lm.mpl gga_c_lyp.mpl gga_c_op_b88.mpl      \
@@ -39,14 +37,10 @@ gga_order_3 = \
   gga_c_zvpbeint.mpl hyb_gga_xc_wb97.mpl gga_c_zvpbeloc.mpl         \
   gga_c_chachiyo.mpl gga_c_pbe_vwn.mpl gga_x_wpbeh.mpl
 
-dist_noinst_SCRIPTS = $(gga_order_4) $(gga_order_3)
+dist_noinst_SCRIPTS = $(gga_order_4)
 
 maple2c:
 	@for funct in $(gga_order_4); do \
 	  echo Processing: $${funct%.*}; \
     $(top_srcdir)/scripts/maple2c.pl $(top_srcdir) $${funct%.*} 4; \
-	done
-	@for funct in $(gga_order_3); do \
-	  echo Processing: $${funct%.*}; \
-    $(top_srcdir)/scripts/maple2c.pl $(top_srcdir) $${funct%.*} 3; \
 	done
