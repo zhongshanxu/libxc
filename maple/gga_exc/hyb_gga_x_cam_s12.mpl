@@ -17,7 +17,7 @@
 $include "gga_x_s12.mpl"
 $include "lda_x_erf.mpl"
 
-cam_s21_f := (rs, z, xs) -> attenuation_erf(a_cnst*rs/(1 + z)^(1/3)) * s12g_f(xs)
+cam_s21_f := (rs, z, xs) -> attenuation_erf(a_cnst*rs/(1 + z)^(1/3)) * s12g_f(xs):
 
 f := (rs, z, xt, xs0, xs1) ->
   gga_exchange_nsp(cam_s21_f, rs, z, xs0, xs1):
