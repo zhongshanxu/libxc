@@ -246,8 +246,8 @@ int xc_func_init(xc_func_type *func, int functional, int nspin)
 
   /* these are reasonble defaults */
   func->threshold_zeta  = DBL_EPSILON;
-  func->threshold_sigma = 1e-20;
-  func->threshold_tau   = 1e-20;
+  func->threshold_sigma = DBL_EPSILON;
+  func->threshold_tau   = DBL_EPSILON;
 
   return 0;
 }
