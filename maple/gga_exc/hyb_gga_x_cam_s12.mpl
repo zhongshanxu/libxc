@@ -18,7 +18,7 @@ $include "gga_x_s12.mpl"
 $include "lda_x_erf.mpl"
 
 cam_s12_f := (rs, z, xs0, xs1) ->
-      (1 + z)/2 * lda_x_erf_spin(rs*(2/(1 + z))^(1/3),  1) * s12_g(xs0) +
-      (1 - z)/2 * lda_x_erf_spin(rs*(2/(1 - z))^(1/3),  1) * s12_g(xs1):
+      (1 + z)/2 * lda_x_erf_spin(rs*(2/(1 + z))^(1/3),  1) * s12g_f(xs0) +
+      (1 - z)/2 * lda_x_erf_spin(rs*(2/(1 - z))^(1/3),  1) * s12g_f(xs1):
 
 f := (rs, z, xt, xs0, xs1) -> cam_s12_f(rs, z, xs0, xs1):
