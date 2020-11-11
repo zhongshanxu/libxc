@@ -1,5 +1,5 @@
 (*
- Copyright (C) 2017 M.A.L. Marques
+ Copyright (C) 2020 Susi Lehtola
 
  This Source Code Form is subject to the terms of the Mozilla Public
  License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,6 @@
 *)
 
 $include "gga_x_s12.mpl"
-$include "lda_x_erf.mpl"
+$include "gga_x_ityh.mpl"
 
-cam_s12_f := (rs, z, xs0, xs1) ->
-      (1 + z)/2 * lda_x_erf_spin(rs*(2/(1 + z))^(1/3),  1) * s12g_f(xs0) +
-      (1 - z)/2 * lda_x_erf_spin(rs*(2/(1 - z))^(1/3),  1) * s12g_f(xs1):
-
-f := (rs, z, xt, xs0, xs1) -> cam_s12_f(rs, z, xs0, xs1):
+ityh_enhancement := xs  -> s12g_f(xs):
