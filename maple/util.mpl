@@ -123,7 +123,7 @@ lda_stoll_perp := (lda_func, rs, z) ->
   - lda_stoll_par(lda_func, rs, -z):
 
 gga_stoll_par  := (gga_func, rs, z, xs, spin) ->
-  my_piecewise3(n_spin(rs,  z) <= p_a_threshold_dens, 0,
+  my_piecewise3(screen_dens_zeta(rs, z), 0,
     gga_func(rs*(2/(1 + z))^(1/3), spin, xs, xs*(1 + spin)/2, xs*(1 - spin)/2) * (1 + z)/2):
 
 # Curvature of the Fermi hole (without the current term)
