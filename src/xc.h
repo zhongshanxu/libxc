@@ -186,6 +186,9 @@ typedef struct{
   int   flags;    /* see above for a list of possible flags */
 
   double threshold_dens;
+  double threshold_zeta;
+  double threshold_sigma;
+  double threshold_tau;
 
   /* this allows to have external parameters in the functional */
   func_params_type ext_params;
