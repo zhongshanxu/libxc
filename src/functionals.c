@@ -245,7 +245,7 @@ int xc_func_init(xc_func_type *func, int functional, int nspin)
   func->threshold_dens = func->info->threshold_dens;
 
   /* these are reasonble defaults */
-  func->threshold_zeta  = 1.0 - 1.0e-12;
+  func->threshold_zeta  = DBL_EPSILON;
   func->threshold_sigma = 1e-20;
   func->threshold_tau   = 1e-20;
 
@@ -310,26 +310,56 @@ void xc_func_set_dens_threshold(xc_func_type *p, double t_dens)
 {
   int ii;
 
-  p->threshold_dens = t_dens;
+  if(t_dens  > 0.0)
+    p->threshold_dens = t_dens;
 
   for(ii=0; ii<p->n_func_aux; ii++) {
     xc_func_set_dens_threshold(p->func_aux[ii], t_dens);
   }
 }
-
 /*------------------------------------------------------*/
-void xc_func_set_thresholds(xc_func_type *p, double t_dens, double t_zeta, double t_sigma, double t_tau)
+void xc_func_set_zeta_threshold(xc_func_type *p, double t_zeta)
 {
   int ii;
 
-  if(t_dens  > 0.0) p->threshold_dens  = t_dens;
-  if(t_zeta  > 0.0) p->threshold_zeta  = t_zeta;
-  if(t_sigma > 0.0) p->threshold_sigma = t_sigma;
-  if(t_tau   > 0.0) p->threshold_tau   = t_tau;
+  if(t_zeta  > 0.0)
+    p->threshold_zeta = t_zeta;
 
   for(ii=0; ii<p->n_func_aux; ii++) {
-    xc_func_set_thresholds(p->func_aux[ii], t_dens, t_zeta, t_sigma, t_tau);
+    xc_func_set_zeta_threshold(p->func_aux[ii], t_dens);
   }
+}
+/*------------------------------------------------------*/
+void xc_func_set_sigma_threshold(xc_func_type *p, double t_sigma)
+{
+  int ii;
+
+  if(t_sigma  > 0.0)
+    p->threshold_sigma = t_sigma;
+
+  for(ii=0; ii<p->n_func_aux; ii++) {
+    xc_func_set_sigma_threshold(p->func_aux[ii], t_dens);
+  }
+}
+/*------------------------------------------------------*/
+void xc_func_set_tau_threshold(xc_func_type *p, double t_tau)
+{
+  int ii;
+
+  if(t_tau  > 0.0)
+    p->threshold_tau = t_tau;
+
+  for(ii=0; ii<p->n_func_aux; ii++) {
+    xc_func_set_tau_threshold(p->func_aux[ii], t_dens);
+  }
+}
+/*------------------------------------------------------*/
+void xc_func_set_thresholds(xc_func_type *p, double t_dens, double t_zeta, double t_sigma, double t_tau)
+{
+  xc_func_set_dens_threshold(p, t_dens);
+  xc_func_set_zeta_threshold(p, t_zeta);
+  xc_func_set_sigma_threshold(p, t_sigma);
+  xc_func_set_tau_threshold(p, t_tau);
 }
 
 /*------------------------------------------------------*/

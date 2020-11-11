@@ -285,6 +285,9 @@ void  xc_func_free(xc_func_type *p);
 const xc_func_info_type *xc_func_get_info(const xc_func_type *p);
 
 void  xc_func_set_dens_threshold(xc_func_type *p, double t_dens);
+void  xc_func_set_zeta_threshold(xc_func_type *p, double t_zeta);
+void  xc_func_set_sigma_threshold(xc_func_type *p, double t_sigma);
+void  xc_func_set_tau_threshold(xc_func_type *p, double t_tau);
 void  xc_func_set_thresholds(xc_func_type *p, double t_dens, double t_zeta, double t_sigma, double t_tau);
 
 void  xc_func_set_ext_params(xc_func_type *p, const double *ext_params);
