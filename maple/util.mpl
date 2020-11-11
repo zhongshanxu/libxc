@@ -90,29 +90,32 @@ beta_Hu_Langreth := rs -> 0.066724550603149220*(1 + 0.1*rs)/(1 + 0.1778*rs):
 lda_x_spin := (rs, z) -> simplify(LDA_X_FACTOR*((1 + z)/2)^(1 + 1/DIMENSIONS)*(RS_FACTOR/rs)):
 lda_k_spin := (rs, z) -> simplify(K_FACTOR_C*((1 + z)/2)^(5/3)*(RS_FACTOR/rs)^2):
 
+# Screen out small densities as well as the zero component from fully spin polarized densities due to terms of the form (1+z)^{-n}
+screen_dens_zeta := (rs, z) -> (n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta):
+
 gga_exchange_nsp := (func, rs, z, xs0, xs1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1)):
 gga_exchange := (func, rs, z, xs0, xs1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_x_spin(rs,  z)*func(xs0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_x_spin(rs, -z)*func(xs1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1)):
 gga_kinetic := (func, rs, z, xs0, xs1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_k_spin(rs,  z)*func(xs0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_k_spin(rs, -z)*func(xs1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1)):
 
 mgga_exchange_nsp := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0, u0, t0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1, u1, t1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0, u0, t0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1, u1, t1)):
 mgga_exchange := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_x_spin(rs,  z)*func(xs0, u0, t0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_x_spin(rs, -z)*func(xs1, u1, t1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0, u0, t0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1, u1, t1)):
 mgga_kinetic := (func, rs, z, xs0, xs1, u0, u1) ->
-  + my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, lda_k_spin(rs,  z)*func(xs0, u0))
-  + my_piecewise3((n_spin(rs, -z) <= p_a_threshold_dens) or (1-z <= p_a_threshold_zeta), 0, lda_k_spin(rs, -z)*func(xs1, u1)):
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0, u0))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1, u1)):
 
 # This is the Stoll decomposition in our language
 lda_stoll_par  := (lda_func, rs, z) ->
-  my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, (1 + z)/2 * lda_func(rs*(2/(1 + z))^(1/3), 1)):
+  my_piecewise3(screen_dens_zeta(rs,  z), 0, (1 + z)/2 * lda_func(rs*(2/(1 + z))^(1/3), 1)):
 
 lda_stoll_perp := (lda_func, rs, z) ->
   + lda_func(rs, z)
@@ -132,7 +135,7 @@ Fermi_D_corrected := (xs, ts) -> (1 - xs^2/(8*ts)) * (1 - exp(-4*ts^2/params_a_F
 
 # Becke function used in several correlation functionals
 b88_R_F := (f_x, rs, z, xs) ->
-  my_piecewise3((n_spin(rs,  z) <= p_a_threshold_dens) or (1+z <= p_a_threshold_zeta), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs))):
+  my_piecewise3(screen_dens_zeta(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs))):
 b88_zss := (css, f_x, rs, z, xs) -> 2*css*b88_R_F(f_x, rs, z, xs):
 b88_zab := (cab, f_x, rs, z, xs0, xs1) -> cab*(b88_R_F(f_x, rs, z, xs0) + b88_R_F(f_x, rs, -z, xs1)):
 
