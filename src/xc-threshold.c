@@ -885,6 +885,9 @@ int main(int argc, char *argv[]) {
   /* this leads to the number of radial points as */
   const double nrad = ceil(log(rmax/rmin) / h);
 
+  /* Minimal threshold to check */
+  const double min_threshold = 1e-40;
+
   /* radial point id */
   int irad;
   /* radius */
@@ -941,10 +944,14 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (nfail == 0) {
+    if (nfail == 0 && threshold > min_threshold) {
       /* Values are still OK, go further */
       threshold /= 10.0;
     } else {
+      if(threshold <= min_threshold) {
+        printf("Search capped by set minimum threshold %e.\n", min_threshold);
+      }
+
       /* Working threshold */
       double ok_thresh = threshold * 10.0;
       /* Current threshold */
