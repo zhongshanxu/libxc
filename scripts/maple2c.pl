@@ -41,10 +41,13 @@ if(-f $config{"functional"}.".mpl"){
     $config{"mathfile"} =  $config{"srcdir"}."/maple/".$temp."_exc/".$config{"functional"}.".mpl";
   }elsif(-f $config{"srcdir"}."/maple/".$temp."_vxc/".$config{"functional"}.".mpl"){
     $config{"mathfile"} =  $config{"srcdir"}."/maple/".$temp."_vxc/".$config{"functional"}.".mpl";
+  } else {
+    # Couldn't find the file, so we'll just set this to the functional so that we die below
+    $config{"mathfile"} = $config{"functional"}.".mpl"
   }
 }
 
-open my $in, '<', $config{"mathfile"} or die "File $mathfile does not exist\n";
+open my $in, '<', $config{"mathfile"} or die "Could not find Maple source for functional, $config{mathfile}\n";
 
 # Find out the type of functional
 while($_ = <$in>){
