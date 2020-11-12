@@ -30,7 +30,7 @@ f_s := z -> add(c_25_i[i]*z^(i-1), i=1..5)/add(d_25_i[i]*z^(i-1), i=1..4):
 ss := (rs, z) -> f_r(rs)*f_s(z)*1.28:
 
 (* Equation (22) *)
-alpha_z := (rs, z) -> 2/((1 + z)^ss(rs, z) + (1 - z)^ss(rs, z)):
+alpha_z := (rs, z) -> 2/(opz_pow_n(z,ss(rs, z)) + opz_pow_n(-z,ss(rs, z))):
 
 (* Equation (21) *)
 eta6  := 0.41081146652128:
@@ -61,7 +61,7 @@ beta_eff := rs ->
 
 (* Equation (15), see erratum *)
 ax   := (3*Pi^2)^(1/3):
-k_fs := (rs, z) -> ax*RS_FACTOR/rs * (1 + z)^(1/3):
+k_fs := (rs, z) -> ax*RS_FACTOR/rs * opz_pow_n(z,1/3):
 
 (* Equation (17) *)
 k_uu := (rs, z) -> alpha_eff(rs,  z)*k_fs(rs,  z):

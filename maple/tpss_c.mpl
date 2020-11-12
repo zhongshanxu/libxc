@@ -17,7 +17,7 @@ tpss_C00 := (cc, z) ->
 
 (* Equation 34 *)
 tpss_C0 := (cc, z, xt, xs0, xs1) ->
-  + tpss_C00(cc, z) / (1 + tpss_csi2(z, xt, xs0, xs1)*((1 + z)^(-4/3) + (1 - z)^(-4/3))/2)^4:
+  + tpss_C00(cc, z) / (1 + tpss_csi2(z, xt, xs0, xs1)*(opz_pow_n(z,-4/3) + opz_pow_n(-z,-4/3))/2)^4:
 
 (* Equation 11, with tau_W from Equation 12 *)
 tpss_aux := (z, xt, ts0, ts1) ->

@@ -19,6 +19,6 @@
 
 f_sloc := (rs, z) -> 
   -params_a_a/(2*(params_a_b + 1)) * n_total(rs)^params_a_b *
-  ((1 + z)^(params_a_b + 1) + (1 - z)^(params_a_b + 1)):
+  (opz_pow_n(z,params_a_b + 1) + opz_pow_n(-z,params_a_b + 1)):
 
 f := (rs, z) -> f_sloc(rs, z):

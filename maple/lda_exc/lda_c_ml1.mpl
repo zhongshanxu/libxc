@@ -17,8 +17,8 @@
 CC := 6.187335:
 bb := [2.763169, 1.757515, 1.741397, 0.568985, 1.572202, 1.885389]:
 
-malpha := z -> params_a_fc*((1 + z)^params_a_q + (1 - z)^params_a_q):
-mbeta  := z -> (1 - z^2)^(1/3)/((1 + z)^(1/3) + (1 - z)^(1/3)):
+malpha := z -> params_a_fc*(opz_pow_n(z,params_a_q) + opz_pow_n(-z,params_a_q)):
+mbeta  := z -> (1 - z^2)^(1/3)/(opz_pow_n(z,1/3) + opz_pow_n(-z,1/3)):
 
 kk := (rs, z) -> CC*malpha(z)*mbeta(z)*RS_FACTOR/rs:
 QQ := (rs, z) ->

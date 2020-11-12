@@ -30,7 +30,7 @@ pmgb_gc0 := rs -> pmgb_g0(rs) - 1/2:
 
 # Eq. (14)
 pmgb_phi := (n, z) ->
-         ((1 + z)^(n/3) + (1 - z)^(n/3))/2:
+         (opz_pow_n(z,n/3) + opz_pow_n(-z,n/3))/2:
 
 # Eq. (22)
 pmgb_Q_a := 5.84605:
