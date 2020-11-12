@@ -46,9 +46,9 @@ if evalb(Polarization = "ferr") then
     + f_lda_x(rs,  1) * b97mv_g(b97mv_gamma_x,  b97mv_wx_ss, b97mv_par_x,  b97mv_par_n, xs0, ts0, 0):
 else
   b97mv_f_aux := (rs, z, xs0, xs1, ts0, ts1) ->
-    + (1 + z)/2 * f_lda_x(rs*(2/(1 + z))^(1/3),  1)
+    + opz_pow_n( z,1)/2 * f_lda_x(rs*(2/(1 + z))^(1/3),  1)
       * b97mv_g(b97mv_gamma_x,  b97mv_wx_ss, b97mv_par_x,  b97mv_par_n, xs0, ts0, 0)
-    + (1 - z)/2 * f_lda_x(rs*(2/(1 - z))^(1/3),  1)
+    + opz_pow_n(-z,1)/2 * f_lda_x(rs*(2/(1 - z))^(1/3),  1)
       * b97mv_g(b97mv_gamma_x,  b97mv_wx_ss, b97mv_par_x,  b97mv_par_n, xs1, ts1, 0):
 end if:
 

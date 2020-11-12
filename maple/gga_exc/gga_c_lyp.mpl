@@ -35,7 +35,7 @@ t5 := (rs, z, xs0, xs1) ->
   aux5*(1 - z^2)*(delta(rs) - 11)*(xs0^2*opz_pow_n(z,11/3) + xs1^2*opz_pow_n(-z,11/3)):
 t6 := (z, xs0, xs1) ->
   -aux6*(2/3*(xs0^2*opz_pow_n(z,8/3) + xs1^2*opz_pow_n(-z,8/3))
-  -(1 + z)^2*xs1^2*opz_pow_n(-z,8/3)/4 - (1 - z)^2*xs0^2*opz_pow_n(z,8/3)/4):
+  -opz_pow_n(z,2)*xs1^2*opz_pow_n(-z,8/3)/4 - opz_pow_n(-z,2)^2*xs0^2*opz_pow_n(z,8/3)/4):
 
 f_lyp := (rs, z, xt, xs0, xs1) -> params_a_A*(t1(rs/RS_FACTOR, z) + omega(rs/RS_FACTOR)*(
   + t2(rs/RS_FACTOR, z, xt) + t3(z) + t4(rs/RS_FACTOR, z, xs0, xs1)

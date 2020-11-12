@@ -153,8 +153,8 @@ ec_opp := (rs, z) ->
 
 (* Equation (13) *)
 ec_par := (rs, z) ->
-  + (1 + z)^2/8*(Q_1ud(k_uu(rs, z)) + Q_2ud(k_uu(rs, z)) + Q_3ud(k_uu(rs, z)))
-  + (1 - z)^2/8*(Q_1ud(k_dd(rs, z)) + Q_2ud(k_dd(rs, z)) + Q_3ud(k_dd(rs, z))):
+  + opz_pow_n( z,2)/8*(Q_1ud(k_uu(rs, z)) + Q_2ud(k_uu(rs, z)) + Q_3ud(k_uu(rs, z)))
+  + opz_pow_n(-z,2)/8*(Q_1ud(k_dd(rs, z)) + Q_2ud(k_dd(rs, z)) + Q_3ud(k_dd(rs, z))):
 
 # This avoids divisions by zero for the ferromagnetic case
 pk09_m_z := z -> m_max(m_min(z, 1 - 1e-10), -1 + 1e-10):

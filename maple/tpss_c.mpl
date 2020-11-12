@@ -32,8 +32,8 @@ if evalb(Polarization = "ferr") then
 else
   tpss_par  := (f_gga, rs, z, xt, xs0, xs1, ts0, ts1) ->
     - (1 + tpss_C0(params_a_C0_c, z, xt, xs0, xs1))*tpss_aux(z, xt, ts0, ts1)^2*(
-      + m_max(f_gga(rs*(2/(1 + z))^(1/3),  1, xs0, xs0, 0), f_gga(rs, z, xt, xs0, xs1))*(1 + z)/2
-      + m_max(f_gga(rs*(2/(1 - z))^(1/3), -1, xs1, 0, xs1), f_gga(rs, z, xt, xs0, xs1))*(1 - z)/2
+      + m_max(f_gga(rs*(2/(1 + z))^(1/3),  1, xs0, xs0, 0), f_gga(rs, z, xt, xs0, xs1))*opz_pow_n( z,1)/2
+      + m_max(f_gga(rs*(2/(1 - z))^(1/3), -1, xs1, 0, xs1), f_gga(rs, z, xt, xs0, xs1))*opz_pow_n(-z,1)/2
     ):
 
   tpss_perp := (f_gga, rs, z, xt, xs0, xs1, ts0, ts1) ->

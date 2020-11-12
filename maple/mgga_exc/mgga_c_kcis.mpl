@@ -53,8 +53,8 @@ if evalb(Polarization = "ferr") then
 else
   kcis_f := (rs, z, xt, xs0, xs1, ts0, ts1) ->
     + gap_f(rs, z, xt)
-    - xs0^2/(8*ts0) * (1 + z)/2 * gap_f(rs*(2/(1 + z))^(1/3),  1, xs0)
-    - xs1^2/(8*ts1) * (1 - z)/2 * gap_f(rs*(2/(1 - z))^(1/3), -1, xs1):
+    - xs0^2/(8*ts0) * opz_pow_n( z,1)/2 * gap_f(rs*(2/(1 + z))^(1/3),  1, xs0)
+    - xs1^2/(8*ts1) * opz_pow_n(-z,1)/2 * gap_f(rs*(2/(1 - z))^(1/3), -1, xs1):
 end if:
 
 f  := (rs, z, xt, xs0, xs1, us0, us1, ts0, ts1) ->

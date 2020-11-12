@@ -15,7 +15,7 @@ cab := 0.63:
 css := 0.96:
 
 b88_css := (rs, z, xs, ts) ->
-  - 0.01 * (1 + z)/2 * n_spin(rs, z)^(5/3) * 2*ts * Fermi_D(xs, ts)
+  - 0.01 * opz_pow_n(z,1)/2 * n_spin(rs, z)^(5/3) * 2*ts * Fermi_D(xs, ts)
   * b88_zss(css, b86_f, rs, z, xs)^4 * (
     1 - 2*log(1 + b88_zss(css, b86_f, rs, z, xs)/2)
       / b88_zss(css, b86_f, rs, z, xs)

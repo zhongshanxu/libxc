@@ -63,15 +63,15 @@ if evalb(Polarization = "ferr") then
 else
   # Eq. (28)
   pmgb_cc4 := (rs, z) ->
-         + ((1 + z)^2/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
-         + ((1 - z)^2/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
+         + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
+         + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
          + (1 - z^2) * pmgb_D2(rs)
          - pmgb_phi(8, z)/(5*alpha^2*rs^2):
 
   # Eq. (29)
   pmgb_cc5 := (rs, z) ->
-         + ((1 + z)^2/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
-         + ((1 - z)^2/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
+         + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
+         + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
          + (1 - z^2) * pmgb_D3(rs):
 fi:
 
