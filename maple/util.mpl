@@ -74,12 +74,15 @@ u_total    := (z, us0, us1) -> t_total(z, us0, us1):
 # von Weizsäcker term
 t_vw := (z, xt, us0, us1) -> (xt^2 - u_total(z, us0, us1))/8:
 
+# Screening for extreme values of zeta
+opz_pow_n     := (z,n) -> my_piecewise3(1+z <= p_a_threshold_zeta, 0, (1+z)^n):
+
 # See Eq. (9) of Perdew1992_13244
-f_zeta    := z -> ((1 + z)^(4/3) + (1 - z)^(4/3) - 2)/(2^(4/3) - 2):
-f_zeta_2d := z -> 1/2*((1 + z)^(3/2) + (1 - z)^(3/2)):
+f_zeta    := z -> (opz_pow_n(z,4/3) + opz_pow_n(-z,4/3) - 2)/(2^(4/3) - 2):
+f_zeta_2d := z -> 1/2*(opz_pow_n(z,3/2) + opz_pow_n(-z,3/2)):
 
 # used in several correlation functionals
-mphi := z -> ((1 + z)^(2/3) + (1 - z)^(2/3))/2:
+mphi := z -> (opz_pow_n(z,2/3) + opz_pow_n(-z,2/3))/2:
 tt   := (rs, z, xt) -> xt/(4*2^(1/3)*mphi(z)*sqrt(rs)):
 
 # in the paper it is beta_a = 0.066725
