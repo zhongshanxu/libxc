@@ -19,6 +19,6 @@ params_a_alpha := 1:
 $endif
 
 f_lda_x := (rs, z) ->
-  + params_a_alpha*my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_spin(rs,  z))
-  + params_a_alpha*my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_spin(rs, -z)):
+  + params_a_alpha*my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z))
+  + params_a_alpha*my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)):
 f       := (rs, z) -> f_lda_x(rs, z):
