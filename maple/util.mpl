@@ -74,12 +74,15 @@ u_total    := (z, us0, us1) -> t_total(z, us0, us1):
 # von Weizsäcker term
 t_vw := (z, xt, us0, us1) -> (xt^2 - u_total(z, us0, us1))/8:
 
+# Screening for extreme values of zeta
+opz_pow_n     := (z,n) -> my_piecewise3(1+z <= p_a_zeta_threshold, 0, (1+z)^n):
+
 # See Eq. (9) of Perdew1992_13244
-f_zeta    := z -> ((1 + z)^(4/3) + (1 - z)^(4/3) - 2)/(2^(4/3) - 2):
-f_zeta_2d := z -> 1/2*((1 + z)^(3/2) + (1 - z)^(3/2)):
+f_zeta    := z -> (opz_pow_n(z,4/3) + opz_pow_n(-z,4/3) - 2)/(2^(4/3) - 2):
+f_zeta_2d := z -> 1/2*(opz_pow_n(z,3/2) + opz_pow_n(-z,3/2)):
 
 # used in several correlation functionals
-mphi := z -> ((1 + z)^(2/3) + (1 - z)^(2/3))/2:
+mphi := z -> (opz_pow_n(z,2/3) + opz_pow_n(-z,2/3))/2:
 tt   := (rs, z, xt) -> xt/(4*2^(1/3)*mphi(z)*sqrt(rs)):
 
 # in the paper it is beta_a = 0.066725
@@ -87,29 +90,35 @@ beta_Hu_Langreth := rs -> 0.066724550603149220*(1 + 0.1*rs)/(1 + 0.1778*rs):
 
 # Generate exchange and kinetic functionals from the expression for the
 # enhancement factor
-lda_x_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_dens_threshold, 0,
-    simplify(LDA_X_FACTOR*((1 + z)/2)^(1 + 1/DIMENSIONS)*(RS_FACTOR/rs))):
+lda_x_spin := (rs, z) -> simplify(LDA_X_FACTOR*opz_pow_n(z,1 + 1/DIMENSIONS)*2^(-1-1/DIMENSIONS)*(RS_FACTOR/rs)):
+lda_k_spin := (rs, z) -> simplify(K_FACTOR_C*opz_pow_n(z,5/3)*2^(-5/3)*(RS_FACTOR/rs)^2):
 
-lda_k_spin := (rs, z) -> my_piecewise3(n_spin(rs, z) <= 1.01*p_a_dens_threshold, 0,
-    simplify(K_FACTOR_C*((1 + z)/2)^(5/3)*(RS_FACTOR/rs)^2)):
+# Screen out small densities as well as the zero component from fully spin polarized densities due to terms of the form (1+z)^{-n}
+screen_dens := (rs, z) -> (n_spin(rs,  z) <= p_a_dens_threshold):
 
 gga_exchange_nsp := (func, rs, z, xs0, xs1) ->
-         lda_x_spin(rs, z)*func(rs, z, xs0) + lda_x_spin(rs, -z)*func(rs, -z, xs1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1)):
 gga_exchange := (func, rs, z, xs0, xs1) ->
-         lda_x_spin(rs, z)*func(xs0) + lda_x_spin(rs, -z)*func(xs1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1)):
 gga_kinetic := (func, rs, z, xs0, xs1) ->
-         lda_k_spin(rs, z)*func(xs0) + lda_k_spin(rs, -z)*func(xs1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1)):
 
 mgga_exchange_nsp := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
-         lda_x_spin(rs, z)*func(rs, z, xs0, u0, t0) + lda_x_spin(rs, -z)*func(rs, -z, xs1, u1, t1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0, u0, t0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1, u1, t1)):
 mgga_exchange := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
-         lda_x_spin(rs, z)*func(xs0, u0, t0) + lda_x_spin(rs, -z)*func(xs1, u1, t1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0, u0, t0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1, u1, t1)):
 mgga_kinetic := (func, rs, z, xs0, xs1, u0, u1) ->
-         lda_k_spin(rs, z)*func(xs0, u0) + lda_k_spin(rs, -z)*func(xs1, u1):
+  + my_piecewise3(screen_dens(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0, u0))
+  + my_piecewise3(screen_dens(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1, u1)):
 
 # This is the Stoll decomposition in our language
 lda_stoll_par  := (lda_func, rs, z) ->
-  (1 + z)/2 * lda_func(rs*(2/(1 + z))^(1/3), 1):
+  my_piecewise3(screen_dens(rs,  z), 0, opz_pow_n(z,1)/2 * lda_func(rs*(2/(1 + z))^(1/3), 1)):
 
 lda_stoll_perp := (lda_func, rs, z) ->
   + lda_func(rs, z)
@@ -117,8 +126,8 @@ lda_stoll_perp := (lda_func, rs, z) ->
   - lda_stoll_par(lda_func, rs, -z):
 
 gga_stoll_par  := (gga_func, rs, z, xs, spin) ->
- + gga_func(rs*(2/(1 + z))^(1/3), spin, xs, xs*(1 + spin)/2, xs*(1 - spin)/2)
- * (1 + z)/2:
+  my_piecewise3(screen_dens(rs, z), 0,
+    gga_func(rs*(2/(1 + z))^(1/3), spin, xs, xs*(1 + spin)/2, xs*(1 - spin)/2) * (1 + z)/2):
 
 # Curvature of the Fermi hole (without the current term)
 Fermi_D := (xs, ts) -> 1 - xs^2/(8*ts):
@@ -129,21 +138,14 @@ Fermi_D_corrected := (xs, ts) -> (1 - xs^2/(8*ts)) * (1 - exp(-4*ts^2/params_a_F
 
 # Becke function used in several correlation functionals
 b88_R_F := (f_x, rs, z, xs) ->
-  1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs)):
-
+  my_piecewise3(screen_dens(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs))):
 b88_zss := (css, f_x, rs, z, xs) -> 2*css*b88_R_F(f_x, rs, z, xs):
-
-if evalb(Polarization = "ferr") then
-  b88_zab := (cab, f_x, rs, z, xs0, xs1) -> cab*b88_R_F(f_x, rs, 1, xs0):
-else
-  b88_zab := (cab, f_x, rs, z, xs0, xs1) ->
-    cab*(b88_R_F(f_x, rs, z, xs0) + b88_R_F(f_x, rs, -z, xs1)):
-end if:
+b88_zab := (cab, f_x, rs, z, xs0, xs1) -> cab*(b88_R_F(f_x, rs, z, xs0) + b88_R_F(f_x, rs, -z, xs1)):
 
 # Power series often used in mggas
 mgga_w := t -> (K_FACTOR_C - t)/(K_FACTOR_C + t):
 mgga_series_w := (a, n, t) -> add(a[i]*mgga_w(t)^(i-1), i=1..n):
 
 # Used in screened functionals
-kF := (rs, z) -> (3*Pi^2*(1 + z))^(1/3) * RS_FACTOR/rs:
+kF := (rs, z) -> (3*Pi^2)^(1/3) * opz_pow_n(z,1/3) * RS_FACTOR/rs:
 nu := (rs, z) -> p_a_hyb_omega_0_/kF(rs, z):
