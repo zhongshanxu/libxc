@@ -156,4 +156,4 @@ ec_par := (rs, z) ->
   + opz_pow_n( z,2)/8*(Q_1ud(k_uu(rs, z)) + Q_2ud(k_uu(rs, z)) + Q_3ud(k_uu(rs, z)))
   + opz_pow_n(-z,2)/8*(Q_1ud(k_dd(rs, z)) + Q_2ud(k_dd(rs, z)) + Q_3ud(k_dd(rs, z))):
 
-f := (rs, z) -> n_total(rs)*(ec_opp(rs, pk09_m_z(z)) + ec_par(rs, pk09_m_z(z))):
+f := (rs, z) -> n_total(rs)*(ec_opp(rs, z) + ec_par(rs, z)):
