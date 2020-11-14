@@ -23,7 +23,7 @@ $include "b97.mpl"
 
 wb97_x := (rs, z, xs0, xs1) ->
   opz_pow_n( z,1)/2 * lda_x_erf_spin(rs*(2/(1 + z))^(1/3),  1) * b97_g(0.004, params_a_c_x, xs0) +
-  opz_pow_n(-z,1)/2 * lda_x_erf_spin(rs*(2/(1 - z))^(1/3),  1) * b97_g(0.004, params_a_c_x, xs1)
+  opz_pow_n(-z,1)/2 * lda_x_erf_spin(rs*(2/(1 - z))^(1/3),  1) * b97_g(0.004, params_a_c_x, xs1):
 
 f := (rs, z, xt, xs0, xs1) ->
   wb97_x(rs, z, xs0, xs1) +
