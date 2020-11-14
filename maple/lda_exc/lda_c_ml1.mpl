@@ -27,4 +27,4 @@ QQ := (rs, z) ->
   + bb[5]/kk(rs, z)
   - bb[6]/kk(rs, z)^2:
 
-f := (rs, zeta) -> 1/2*(RS_FACTOR/rs)^3 * (1 - zeta^2)/4 * QQ(rs, zeta)
+f := (rs, zeta) -> 1/2*(RS_FACTOR/rs)^3 * (1 - zeta^2)/4 * QQ(rs, zeta):
