@@ -27,11 +27,4 @@ QQ := (rs, z) ->
   + bb[5]/kk(rs, z)
   - bb[6]/kk(rs, z)^2:
 
-# The function does not seem to diverge in the zeta->1 limit, due to
-# the (1 - zeta^2) factor, but maple does not seem to understand it,
-# so we write it down explicitly
-if evalb(Polarization = "ferr") then
-  f := (rs, zeta) -> 0
-else
-  f := (rs, zeta) -> 1/2*(RS_FACTOR/rs)^3 * (1 - zeta^2)/4 * QQ(rs, zeta)
-end if:
+f := (rs, zeta) -> 1/2*(RS_FACTOR/rs)^3 * (1 - zeta^2)/4 * QQ(rs, zeta)

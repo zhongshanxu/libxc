@@ -28,8 +28,4 @@ x1d_f_spin := (rs, z) ->
   -(opz_pow_n(z,1)*int1((1 + z)*x1d_R(rs, z)) - int2(opz_pow_n(z,1)*x1d_R(rs, z))/x1d_R(rs, z))
     / (4.0*Pi*params_a_beta):
 
-if evalb(Polarization = "ferr") then
-  f := (rs, z) -> x1d_f_spin(rs, 1):
-else
-  f := (rs, z) -> x1d_f_spin(rs, z) + x1d_f_spin(rs, -z):
-end if:
+f := (rs, z) -> x1d_f_spin(rs, z) + x1d_f_spin(rs, -z):

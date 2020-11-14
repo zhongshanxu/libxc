@@ -57,23 +57,18 @@ pmgb_D2 := (rs) -> (-0.388*rs + 0.676*rs^2)*exp(-0.547*rs)/rs^2:
 # Eq. (34)
 pmgb_D3 := (rs) -> (-4.95*rs + rs^2)*exp(-0.31*rs)/rs^3:
 
-if evalb(Polarization = "ferr") then
-  pmgb_cc4 := (rs, z) -> pmgb_gpp1(rs) - pmgb_phi(8, 1)/(5*alpha^2*rs^2):
-  pmgb_cc5 := (rs, z) -> pmgb_gpp1(rs):
-else
-  # Eq. (28)
-  pmgb_cc4 := (rs, z) ->
-         + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
-         + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
-         + (1 - z^2) * pmgb_D2(rs)
-         - pmgb_phi(8, z)/(5*alpha^2*rs^2):
+# Eq. (28)
+pmgb_cc4 := (rs, z) ->
+       + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
+       + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
+       + (1 - z^2) * pmgb_D2(rs)
+       - pmgb_phi(8, z)/(5*alpha^2*rs^2):
 
-  # Eq. (29)
-  pmgb_cc5 := (rs, z) ->
-         + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
-         + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
-         + (1 - z^2) * pmgb_D3(rs):
-fi:
+# Eq. (29)
+pmgb_cc5 := (rs, z) ->
+       + (opz_pow_n( z,2)/4) * pmgb_gpp1(rs*(2/(1 + z))^(1/3))
+       + (opz_pow_n(-z,2)/4) * pmgb_gpp1(rs*(2/(1 - z))^(1/3))
+       + (1 - z^2) * pmgb_D3(rs):
 
 # Eq. (30)
 pmgb_C2 := (rs, z) ->
