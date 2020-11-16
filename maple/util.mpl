@@ -96,22 +96,32 @@ lda_k_spin := (rs, z) -> simplify(K_FACTOR_C*opz_pow_n(z,5/3)*2^(-5/3)*(RS_FACTO
 # Screen out small densities as well as the zero component from fully spin polarized densities due to terms of the form (1+z)^{-n}
 screen_dens := (rs, z) -> (n_spin(rs,  z) <= p_a_dens_threshold):
 
+# For most functionals zeta screening occurs inside the funcitonal,
+#  but for B88 and B94 correlation need to screen out also outside
+screen_dens_zeta := (rs, z) -> screen_dens(rs, z) or (1+z <= p_a_zeta_threshold):
+
+# non-separable GGA exchange
 gga_exchange_nsp := (func, rs, z, xs0, xs1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1)):
+# GGA exchange
 gga_exchange := (func, rs, z, xs0, xs1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1)):
+# GGA kinetic energy
 gga_kinetic := (func, rs, z, xs0, xs1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1)):
 
+# non-separable meta-GGA exchange
 mgga_exchange_nsp := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(rs,  z, xs0, u0, t0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(rs, -z, xs1, u1, t1)):
+# meta-GGA exchange
 mgga_exchange := (func, rs, z, xs0, xs1, u0, u1, t0, t1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z)*func(xs0, u0, t0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z)*func(xs1, u1, t1)):
+# meta-GGA kinetic energy
 mgga_kinetic := (func, rs, z, xs0, xs1, u0, u1) ->
   + my_piecewise3(screen_dens(rs,  z), 0, lda_k_spin(rs,  z)*func(xs0, u0))
   + my_piecewise3(screen_dens(rs, -z), 0, lda_k_spin(rs, -z)*func(xs1, u1)):
@@ -138,12 +148,12 @@ Fermi_D_corrected := (xs, ts) -> (1 - xs^2/(8*ts)) * (1 - exp(-4*ts^2/params_a_F
 
 # Becke function used in several correlation functionals
 b88_R_F := (f_x, rs, z, xs) ->
-  my_piecewise3(screen_dens(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs))):
+  my_piecewise3(screen_dens_zeta(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs))):
 b88_zss := (css, f_x, rs, z, xs) -> 2*css*b88_R_F(f_x, rs, z, xs):
 b88_zab := (cab, f_x, rs, z, xs0, xs1) -> cab*(b88_R_F(f_x, rs, z, xs0) + b88_R_F(f_x, rs, -z, xs1)):
 # The meta-GGA version
 b94_R_F := (f_x, rs, z, xs, us, ts) ->
-    my_piecewise3(screen_dens(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs,us,ts))):
+    my_piecewise3(screen_dens_zeta(rs,  z), 0, 1/(2*X_FACTOR_C*n_spin(rs, z)^(1/3)*f_x(xs,us,ts))):
 b94_zss := (css, f_x, rs, z, xs, us, ts) -> 2*css*b94_R_F(f_x, rs, z, xs, us, ts):
 b94_zab := (cab, f_x, rs, z, xs0, xs1, us0, us1, ts0, ts1) ->
   cab*(b94_R_F(f_x, rs, z, xs0, us0, ts0) + b94_R_F(f_x, rs, -z, xs1, us1, ts1)):
