@@ -76,10 +76,10 @@ if ($commands{$config{"functype"}}) {
   $commands{$config{"functype"}}->();
 } else {
   die "No such type: ".$config{"functype"}."\n";
-} 
+}
 
 #####################################################################
-# Returns the variables of a LDA and constructs all spin variants of 
+# Returns the variables of a LDA and constructs all spin variants of
 # the derivatives
 sub lda_var_der() {
   # these are the variables that the functional depends on
@@ -93,7 +93,7 @@ sub lda_var_der() {
     ["v3rho3"],
     ["v4rho4"]
       );
-  
+
   my @derivatives = ();
   for(my $order=0; $order< $config{"max_order"}+1; $order++){
     $derivatives[$order] = [];
@@ -107,7 +107,7 @@ sub lda_var_der() {
 
 
 #####################################################################
-# Returns the variables of a GGA and constructs all spin variants of 
+# Returns the variables of a GGA and constructs all spin variants of
 # the derivatives
 sub gga_var_der() {
   # these are the variables that the functional depends on
@@ -121,7 +121,7 @@ sub gga_var_der() {
     ["v3rho3", "v3rho2sigma", "v3rhosigma2", "v3sigma3"],
     ["v4rho4", "v4rho3sigma", "v4rho2sigma2", "v4rhosigma3", "v4sigma4"]
       );
-  
+
   my @derivatives = ();
   for(my $order=0; $order< $config{"max_order"}+1; $order++){
     $derivatives[$order] = [];
@@ -135,7 +135,7 @@ sub gga_var_der() {
 
 
 #####################################################################
-# Returns the variables of a MGGA and constructs all spin variants of 
+# Returns the variables of a MGGA and constructs all spin variants of
 # the derivatives
 sub mgga_var_der() {
   # these are the variables that the functional depends on
@@ -145,9 +145,9 @@ sub mgga_var_der() {
   my @partials = (
     ["zk"],
     ["vrho", "vsigma", "vlapl", "vtau"],
-    ["v2rho2", "v2rhosigma", "v2rholapl", "v2rhotau", "v2sigma2", 
+    ["v2rho2", "v2rhosigma", "v2rholapl", "v2rhotau", "v2sigma2",
      "v2sigmalapl", "v2sigmatau", "v2lapl2", "v2lapltau", "v2tau2"],
-    ["v3rho3", "v3rho2sigma", "v3rho2lapl", "v3rho2tau", "v3rhosigma2", 
+    ["v3rho3", "v3rho2sigma", "v3rho2lapl", "v3rho2tau", "v3rhosigma2",
      "v3rhosigmalapl", "v3rhosigmatau", "v3rholapl2", "v3rholapltau",
      "v3rhotau2", "v3sigma3", "v3sigma2lapl", "v3sigma2tau", "v3sigmalapl2",
      "v3sigmalapltau", "v3sigmatau2", "v3lapl3", "v3lapl2tau", "v3lapltau2",
@@ -163,7 +163,7 @@ sub mgga_var_der() {
      "v4lapl2tau2", "v4lapltau3", "v4tau4",
     ]
       );
-  
+
   my @derivatives = ();
   for(my $order=0; $order< $config{"max_order"}+1; $order++){
     $derivatives[$order] = [];
@@ -176,7 +176,7 @@ sub mgga_var_der() {
 }
 
 #####################################################################
-# This separates the derivatives of vxc into derivatives of vxc_0 
+# This separates the derivatives of vxc into derivatives of vxc_0
 # and vxc_1. All other derivatives (e.g. vsigma) are ignored.
 sub filter_vxc_derivatives {
   my @all_derivatives = @{$_[0]};
@@ -224,15 +224,15 @@ sub work_lda_exc {
   my $variables, $derivatives;
 
   ($variables, $derivatives) = lda_var_der();
-  
+
   # get arguments of the functions
   $input_args  = "const double *rho";
   $output_args = ", double *zk LDA_OUT_PARAMS_NO_EXC(XC_COMMA double *, )";
 
-  my ($der_def_unpol, @out_c_unpol) = 
+  my ($der_def_unpol, @out_c_unpol) =
       maple2c_create_derivatives($variables, $derivatives, "mf", "unpol");
   my $out_c_unpol = join(", ", @out_c_unpol);
-  my ($der_def_pol, @out_c_pol) = 
+  my ($der_def_pol, @out_c_pol) =
       maple2c_create_derivatives($variables, $derivatives, "mf", "pol");
   my $out_c_pol = join(", ", @out_c_pol);
 
@@ -262,8 +262,15 @@ C([$maple_zk, $out_c_unpol], optimize, deducetypes=false):
 
     "pol", "
 dens := (r0, r1) -> r0 + r1:
-zeta := (r0, r1) -> (r0 - r1)/(r0 + r1):
-
+zeta := proc(r0, r1)
+     z := (r0 - r1)/(r0 + r1):
+     if 1+z < p_a_zeta_threshold then
+        z:=-1+p_a_zeta_threshold:
+     end if:
+     if 1-z < p_a_zeta_threshold then
+        z:=1-p_a_zeta_threshold:
+     end if:
+end proc:
 $der_def_pol
 
 $maple_code
@@ -289,18 +296,18 @@ sub work_lda_vxc {
 
   # we obtain the missing pieces for maple
   # unpolarized calculation
-  my ($der_def_unpol, @out_c_unpol) = 
+  my ($der_def_unpol, @out_c_unpol) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "unpol");
   my $out_c_unpol = join(", ", @out_c_unpol);
-  
+
   # polarized calculation
-  my ($der_def_pol, @out_c_pol1) = 
+  my ($der_def_pol, @out_c_pol1) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "pol");
-  my ($der_def_pol2, @out_c_pol2) = 
+  my ($der_def_pol2, @out_c_pol2) =
       maple2c_create_derivatives($variables, $derivatives2, "mf1", "pol");
 
   $der_def_pol .= $der_def_pol2;
-  
+
   push(@out_c_pol1, @out_c_pol2);
   my $out_c_pol = join(", ", sort sort_alphanumerically @out_c_pol1);
 
@@ -315,7 +322,7 @@ mf1   := (r0, r1) -> eval(mzk(r1, r0)):
 ";
 
   my $maple_vrho0 = "vrho_0_ = mf0(".join(", ", @{$variables}).")";
-  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")"; 
+  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")";
 
   # we build 2 variants of the functional, for unpolarized, and polarized densities
   @variants = (
@@ -355,7 +362,7 @@ sub work_gga_exc {
   $input_args  = "const double *rho, const double *sigma";
   $output_args = ", double *zk GGA_OUT_PARAMS_NO_EXC(XC_COMMA double *, )";
 
-  my ($der_def, @out_c) = 
+  my ($der_def, @out_c) =
       maple2c_create_derivatives($variables, $derivatives, "mf");
   my $out_c = join(", ", @out_c);
   $out_c = ", $out_c" if ($out_c ne "");
@@ -415,25 +422,25 @@ sub work_gga_vxc {
   ($variables, $all_derivatives) = gga_var_der();
   my $derivatives, $derivatives1, $derivatives2;
   ($derivatives, $derivatives1, $derivatives2) = filter_vxc_derivatives($all_derivatives);
-    
+
   # get arguments of the functions
   $input_args  = "const double *rho, const double *sigma";
   $output_args = "GGA_OUT_PARAMS_NO_EXC(XC_COMMA double *, )";
-  
+
   # we obtain the missing pieces for maple
   # unpolarized calculation
-  my ($der_def_unpol, @out_c_unpol) = 
+  my ($der_def_unpol, @out_c_unpol) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "unpol");
   my $out_c_unpol = join(", ", @out_c_unpol);
 
   # polarized calculation
-  my ($der_def_pol, @out_c_pol1) = 
+  my ($der_def_pol, @out_c_pol1) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "pol");
-  my ($der_def_pol2, @out_c_pol2) = 
+  my ($der_def_pol2, @out_c_pol2) =
       maple2c_create_derivatives($variables, $derivatives2, "mf1", "pol");
 
   $der_def_pol .= $der_def_pol2;
-  
+
   push(@out_c_pol1, @out_c_pol2);
   my $out_c_pol = join(", ", sort sort_alphanumerically @out_c_pol1);
 
@@ -451,7 +458,7 @@ mf1   := (r0, r1, s0, s1, s2) -> eval(mzk(r1, r0, s2, s1, s0)):
 ";
 
   my $maple_vrho0 = "vrho_0_ = mf0(".join(", ", @{$variables}).")";
-  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")"; 
+  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")";
 
   # we build 2 variants of the functional, for unpolarized and polarized densities
   @variants = (
@@ -491,12 +498,12 @@ sub work_mgga_exc {
   my $variables, $derivatives;
 
   ($variables, $derivatives) = mgga_var_der();
-  
+
   # get arguments of the functions
   $input_args  = "const double *rho, const double *sigma, const double *lapl, const double *tau";
   $output_args = ", double *zk MGGA_OUT_PARAMS_NO_EXC(XC_COMMA double *, )";
 
-  my ($der_def, @out_c) = 
+  my ($der_def, @out_c) =
       maple2c_create_derivatives($variables, $derivatives, "mf");
   my $out_c = join(", ", @out_c);
   $out_c = ", $out_c" if ($out_c ne "");
@@ -571,18 +578,18 @@ sub work_mgga_vxc {
 
   # we obtain the missing pieces for maple
   # unpolarized calculation
-  my ($der_def_unpol, @out_c_unpol) = 
+  my ($der_def_unpol, @out_c_unpol) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "unpol");
   my $out_c_unpol = join(", ", @out_c_unpol);
 
   # polarized calculation
-  my ($der_def_pol, @out_c_pol1) = 
+  my ($der_def_pol, @out_c_pol1) =
       maple2c_create_derivatives($variables, $derivatives1, "mf0", "pol");
-  my ($der_def_pol2, @out_c_pol2) = 
+  my ($der_def_pol2, @out_c_pol2) =
       maple2c_create_derivatives($variables, $derivatives2, "mf1", "pol");
 
   $der_def_pol .= $der_def_pol2;
-  
+
   push(@out_c_pol1, @out_c_pol2);
   my $out_c_pol = join(", ", sort sort_alphanumerically @out_c_pol1);
 
@@ -600,7 +607,7 @@ mf1   := (r0, r1, s0, s1, s2, l0, l1, tau0, tau1) -> eval(mzk(r1, r0, s2, s1, s0
 ";
 
   my $maple_vrho0 = "vrho_0_ = mf0(".join(", ", @{$variables}).")";
-  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")"; 
+  my $maple_vrho1 = "vrho_1_ = mf1(".join(", ", @{$variables}).")";
 
   # we build 2 variants of the functional, for unpolarized and polarized densities
   @variants = (
