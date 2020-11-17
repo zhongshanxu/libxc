@@ -264,12 +264,7 @@ C([$maple_zk, $out_c_unpol], optimize, deducetypes=false):
 dens := (r0, r1) -> r0 + r1:
 zeta := proc(r0, r1)
      z := (r0 - r1)/(r0 + r1):
-     if 1+z < p_a_zeta_threshold then
-        z:=-1+p_a_zeta_threshold:
-     end if:
-     if 1-z < p_a_zeta_threshold then
-        z:=1-p_a_zeta_threshold:
-     end if:
+     return my_piecewise5(1+z < p_a_zeta_threshold, -1 + p_a_zeta_threshold, 1-z < p_a_zeta_threshold, 1 - p_a_zeta_threshold, z)
 end proc:
 $der_def_pol
 
