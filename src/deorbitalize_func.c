@@ -263,14 +263,18 @@ xc_deorbitalize_func(const xc_func_type *func, size_t np,
 
   /* evaluate the kinetic energy functional */
   if(func->nspin == XC_UNPOLARIZED){
-    xc_mgga_evaluate_functional(func->func_aux[1], np, rho, sigma, lapl, tau,
+    /* tau has to be present and be positive and large, otherwise the curvature of the
+       Fermi hole can become negative */
+    for(ii=0; ii<np; ii++)
+      mtau[ii] = DBL_MAX;
+    xc_mgga_evaluate_functional(func->func_aux[1], np, rho, sigma, lapl, mtau,
                            ked1_zk MGGA_OUT_PARAMS_NO_EXC(XC_COMMA, ked1_));
   }else{
     for(ii=0; ii<np; ii++){
       mrho  [2*ii] = rho  [2*ii]; mrho  [2*ii+1] = 0.0;
       msigma[3*ii] = sigma[3*ii]; msigma[3*ii+1] = 0.0; msigma[3*ii+2] = 0.0;
       mlapl [2*ii] = lapl [2*ii]; mlapl [2*ii+1] = 0.0;
-      mtau  [2*ii] = tau  [2*ii]; mtau  [2*ii+1] = 0.0;
+      mtau  [2*ii] = DBL_MAX;     mtau  [2*ii+1] = 0.0;
     }
     xc_mgga_evaluate_functional(func->func_aux[1], np, mrho, msigma, mlapl, mtau,
                            ked1_zk MGGA_OUT_PARAMS_NO_EXC(XC_COMMA, ked1_));
@@ -279,7 +283,6 @@ xc_deorbitalize_func(const xc_func_type *func, size_t np,
       mrho  [2*ii] = rho  [2*ii + 1];
       msigma[3*ii] = sigma[3*ii + 2];
       mlapl [2*ii] = lapl [2*ii + 1];
-      mtau  [2*ii] = tau  [2*ii + 1];
     }
     xc_mgga_evaluate_functional(func->func_aux[1], np, mrho, msigma, mlapl, mtau,
                            ked2_zk MGGA_OUT_PARAMS_NO_EXC(XC_COMMA, ked2_));
