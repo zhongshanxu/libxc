@@ -338,6 +338,29 @@ void test_mbrxc()
   }
 }
 
+void test_vw()
+{
+  xc_func_type gga;
+  double r, n, gn;
+  double rho[2] = {0.0, 0.0}, sigma[3] = {0.0, 0.0, 0.0}, zk, vrho[2], vsigma[3];
+  double tmp1, tmp2;
+  
+  xc_func_init(&gga, XC_GGA_K_VW, XC_POLARIZED);
+
+  for(r=1e-4; r<10.0; r+=1e-3){
+    n  = exp(-2.0*r)/M_PI;
+    gn = -2.0 * n;
+
+    rho[0] = n;
+    sigma[0] = gn*gn;
+
+    xc_gga_exc_vxc(&gga,  1, rho, sigma, &zk, vrho, vsigma);
+
+    tmp1 = sigma[0]/(8.0*n*n);
+    printf("%16.10lf\t%16.10lf\t%16.10lf\n", rho[0], zk, tmp1);
+  }
+}
+
 int main()
 {
   //test_expi();
@@ -349,7 +372,8 @@ int main()
   //test_gga();
   //test_ak13();
   //test_mgga();
-  test_mbrxc();
+  //test_mbrxc();
+  test_vw();
 
   //printf("number = '%d'; key = '%s'", 25, xc_functional_get_name(25));
 
