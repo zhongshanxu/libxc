@@ -35,14 +35,14 @@ attenuation_erf_f2_aux0 := a -> (20*a^2 - 64*a^4)*exp(-1/(4*a^2)) + 10*sqrt(Pi)*
 (* To make this go to zero for large a, we need to throw out the terms with negative powers of 1/a from the series expansion *)
 throw_out_negative_inva := proc(X) select(t -> degree(t, {inva})>0, X); end proc:
 attenuation_erf_f2_aux_taylor := a ->
-eval(throw_out_negative_inva(convert(series(eval(attenuation_erf_f2_aux0(b), b=1/inva), inva=0, 12), polynom)), inva=1/a):
+  eval(throw_out_negative_inva(convert(series(eval(attenuation_erf_f2_aux0(b), b=1/inva), inva=0, 12), polynom)), inva=1/a):
 attenuation_erf_f2_aux := a -> my_piecewise3( a >= DBL_EPSILON^(-1/4), attenuation_erf_f2_aux_taylor(a), attenuation_erf_f2_aux0(a)):
 attenuation_erf_f2 := a ->
   1 + 24*a^2*(- 3 - 36*a^2 + 64*a^4 + attenuation_erf_f2_aux(a)):
 
 attenuation_erf_f3_aux0 := a -> (-8*a + 256*a^3 - 576*a^5 + 3849*a^7 - 122880*a^9)*exp(-1/(4*a^2)) + 2*sqrt(Pi)*(-2 + 60*a^2)*erf(1/(2*a)):
 attenuation_erf_f3_aux_taylor := a ->
-eval(throw_out_negative_inva(convert(series(eval(attenuation_erf_f3_aux0(b), b=1/inva), inva=0, 12), polynom)), inva=1/a):
+  eval(throw_out_negative_inva(convert(series(eval(attenuation_erf_f3_aux0(b), b=1/inva), inva=0, 12), polynom)), inva=1/a):
 attenuation_erf_f3_aux := a -> my_piecewise3( a >= DBL_EPSILON^(-1/4), attenuation_erf_f3_aux_taylor(a), attenuation_erf_f3_aux0(a)):
 attenuation_erf_f3 := a ->
   1 + 8*a/7*(
@@ -54,8 +54,12 @@ attenuation_erf_f3 := a ->
     You can recover the result in Int. J. of Quant. Chem. 100, 1047 (2004)
     by putting a = a/sqrt(3) and multiplying the whole attenuation function by -sqrt(3)
 *)
-attenuation_gau := (a) ->
-  -8/3*a*(att_erf_aux1(a) + 2*a*att_erf_aux2(a)*(1 - 8*a^2) - 4*a):
+(* The terms that go to zero for large a *)
+attenuation_gau_aux0 := a -> att_erf_aux1(a) + 2*a*att_erf_aux2(a)*(1 - 8*a^2):
+attenuation_gau_aux_taylor := a ->
+  eval(throw_out_negative_inva(convert(series(eval(attenuation_gau_aux0(b), b=1/inva), inva=0, 12), polynom)), inva=1/a):
+attenuation_gau_aux := a -> my_piecewise3( a >= DBL_EPSILON^(-1/4), attenuation_gau_aux_taylor(a), attenuation_gau_aux0(a)):
+attenuation_gau := a -> -8/3*a*(attenuation_gau_aux(a) - 4*a):
 
 (* yukawa
     Akinaga and Ten-no, Chem. Phys. Lett. 462, 348 (2008); doi:10.1016/j.cplett.2008.07.103
@@ -63,8 +67,7 @@ attenuation_gau := (a) ->
 att_yuk_aux1 := a -> arctan(1, a):
 att_yuk_aux2 := a -> log(1.0 + 1.0/a^2):
 att_yuk_aux3 := a -> a^2 + 1:
-attenuation_yukawa := a -> my_piecewise3(
-    a > 50, 1/(9*a^2) - 1/(30*a^4),
-    1.0 - 8/3*a*(att_yuk_aux1(a) + a/4*(1 - (att_yuk_aux3(a) + 2)*att_yuk_aux2(a)))
-):
-
+attenuation_yukawa0 := a -> 1.0 - 8/3*a*(att_yuk_aux1(a) + a/4*(1 - (att_yuk_aux3(a) + 2)*att_yuk_aux2(a))):
+attenuation_yukawa_taylor := a ->
+  eval(convert(eval(taylor(attenuation_yukawa0(1/inva), inva=0, 12) assuming inva>0), polynom), inva=1/a):
+attenuation_yukawa := a -> my_piecewise3( a >= DBL_EPSILON^(-1/4), attenuation_yukawa_taylor(a), attenuation_yukawa0(a)):
