@@ -8,7 +8,7 @@
 
 #include "util.h"
 
-#define XC_GGA_K_LGAP_GE          619  /* LGAP_GE by Constantin et al */
+#define XC_GGA_K_LGAP_GE          633  /* LGAP_GE by Constantin et al */
 
 typedef struct{
   double mu[3];
