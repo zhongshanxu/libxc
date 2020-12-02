@@ -191,6 +191,7 @@ set(raw_sources_list
   gga_k_apbeint.c
   gga_k_lc94.c
   gga_k_lkt.c
+  gga_k_vt84f.c
   gga_x_bayesian.c
   gga_x_beefvdw.c
   gga_x_bpccac.c
@@ -249,6 +250,7 @@ set(raw_sources_list
   gga_xc_th2.c
   gga_xc_th3.c
   gga_xc_vv10.c
+  gga_k_lgap.c
   gga_k_lgap_ge.c
   hyb_gga_xc_b1wc.c
   hyb_gga_xc_b3lyp.c
@@ -337,6 +339,8 @@ set(raw_sources_list
   mgga_c_tpssloc.c
   mgga_c_vsxc.c
   mgga_k_pc07.c
+  mgga_k_csk.c
+  mgga_k_csk_loc.c
   mgga_x_2d_prhg07.c
   mgga_x_2d_prp10.c
   mgga_x_br89.c
@@ -392,6 +396,9 @@ set(raw_sources_list
   mgga_x_r2scan.c
   mgga_c_r2scan.c
   mgga_k_lk.c
+  mgga_k_rda.c
+  mgga_k_gea2.c
+  mgga_k_gea4.c
   mix_func.c
   deorbitalize_func.c
   references.c
