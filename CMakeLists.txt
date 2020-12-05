@@ -23,6 +23,7 @@ endif()
 option_with_default(NAMESPACE_INSTALL_INCLUDEDIR "Location within CMAKE_INSTALL_INCLUDEDIR to which headers are installed. Psi4 wants namespace (e.g., /libxc)" /)
 option_with_print(ENABLE_GENERIC "Enable mostly static linking in shared library" OFF)
 option_with_print(ENABLE_FORTRAN "Build Fortran 2003 interface" OFF)
+option_with_print(ENABLE_PYTHON "Install Python interface" OFF)
 
 # GCC appears to be catching -xHost as "-x Host" which breaks the detection
 if(CMAKE_C_COMPILER_ID MATCHES Intel)
@@ -439,6 +440,10 @@ if(ENABLE_FORTRAN)
   set_target_properties(xcf03 PROPERTIES POSITION_INDEPENDENT_CODE ${BUILD_FPIC})
 endif()
 
+if(ENABLE_PYTHON)
+  find_package(PythonLibs REQUIRED)
+endif()
+
 # run get_funcs.pl to generate headers for xc inclusion
 find_package(Perl REQUIRED)
 set(gen_dir "${PROJECT_BINARY_DIR}/gen_funcidx")
@@ -469,7 +474,7 @@ if(BUILD_TESTING)
     DOC "Path to zipping utility")
   if(BZip2_EXECUTABLE)
     enable_testing ()
-    add_subdirectory(testsuite)  
+    add_subdirectory(testsuite)
   else()
     message(FATAL_ERROR "Install `bzip2` command to enable tests")
   endif()
@@ -531,3 +536,8 @@ export(EXPORT "${PN}Targets"
 
 install(FILES ${PROJECT_BINARY_DIR}/libxc.pc
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/)
+
+# Install the Python bindings
+if(ENABLE_PYTHON)
+  add_subdirectory(pylibxc)
+endif()
