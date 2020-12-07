@@ -52,7 +52,7 @@ enforce_smooth_lr := proc(f, a);
   *)
   local a_cutoff := DBL_EPSILON^(-1/(expansion_order-2)):
   (* Return the series expansion for large a; also remove any numerical overflows from the original branch  *)
-  my_piecewise3(a >= a_cutoff, f_large(a), f(m_min(a, a_cutoff))):
+  my_piecewise3(a >= a_cutoff, f_large(m_max(a, a_cutoff)), f(m_min(a, a_cutoff))):
 end proc:
 
 (* error function:
