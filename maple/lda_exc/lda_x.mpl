@@ -18,9 +18,13 @@ $ifdef lda_x_params
 params_a_lda_x_alpha := 1:
 $endif
 
-lda_x_f := (rs, z) -> params_a_lda_x_alpha*(
-  + my_piecewise3(screen_dens(rs,  z), 0, lda_x_spin(rs,  z))
-  + my_piecewise3(screen_dens(rs, -z), 0, lda_x_spin(rs, -z))
-  ):
+z_thr := z -> my_piecewise3(1 + z <= p_a_zeta_threshold, p_a_zeta_threshold - 1, z):
+
+lda_x_s := (rs, z) -> simplify(params_a_lda_x_alpha*LDA_X_FACTOR*((1 + z)/2)^(4/3)*(RS_FACTOR/rs)):
+
+lda_x_f := (rs, z) -> 
+  + my_piecewise3(screen_dens_zeta(rs,  z), 0, lda_x_s(rs, z_thr( z)))
+  + my_piecewise3(screen_dens_zeta(rs, -z), 0, lda_x_s(rs, z_thr(-z)))
+:
 
 f := (rs, z) -> lda_x_f(rs, z):
