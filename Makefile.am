@@ -11,7 +11,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = packaging scripts maple src testsuite cmake pylibxc
 
 include_HEADERS = xc_version.h libxc.bib
-EXTRA_DIST = ChangeLog.md PACKAGING setup.py config.h.cmake.in CMakeLists.txt CITATION
+EXTRA_DIST = ChangeLog.md PACKAGING config.h.cmake.in CMakeLists.txt CITATION
 
 CLEANFILES = *~ *.bak
 
