@@ -13,10 +13,37 @@ throw_out_large_n := proc(X,n) select(t -> abs(degree(t,{b}))<=n, X); end proc:
 
 (* Function that makes f(a) smooth for a->infty *)
 enforce_smooth_lr := proc(f, a);
-  (* The order to use for the expansion: 6th order *)
-  local expansion_order := 6:
-  (* Large a expansion. Due to a bug in Maple 2020, need to use a larger expansion order and truncate *)
-  f_large := a -> eval(throw_out_large_n(convert(series(f(b), b=infinity, expansion_order+10), polynom), expansion_order), b=a):
+
+  (* The order to use for the expansion: 50th order.
+
+     I know this sounds ridiculously high, but it turns out to be
+     necessary to avoid numerical difficulties in the *original*
+     function.
+
+     We want to make the original function f(a) and its series
+     expansion f_series(a) match numerically exactly at the cutoff
+     point, but numerical experiments (and failing test suites)
+     demonstrate f(a) is unstable unless a very high-order expansion
+     is used, since it allows bringing the cutoff point to lower
+     values of a where the functions are more stable.
+
+     Much lower-order expansions could be used if we had e.g. 64-digit
+     accuracy (instead of the ~16 digits with double precision), but
+     this is what we have to live with. Note, however, that since the
+     expansions appear to only use (1/a)^2, the actual number of terms
+     in the Taylor series is half of this...
+
+     2020-12-07 Susi Lehtola
+  *)
+  local expansion_order := 50:
+
+  (* Due to a bug in Maple 2020, series aren't being computed to the
+     requested order. So, we need to use a larger expansion order and
+     then truncate it back. Pad the expansion by this order *)
+   local padding_order := 10:
+
+  (* Calculate large-a expansion *)
+  f_large := a -> eval(throw_out_large_n(convert(series(f(b), b=infinity, expansion_order+padding_order), polynom), expansion_order), b=a):
 
   (* The first term is usually inva^2, which gives an expansion of the type
              inva^2(O(1) + O(inva^2) + O(inva^4) + ...)
